@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,13 +20,14 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
-    private String borrowDate;
-    private String returnData;
-    private double fine;
+    private LocalDateTime borrowDate;
+    private LocalDateTime returnData;
 
 }

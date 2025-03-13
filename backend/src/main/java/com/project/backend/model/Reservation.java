@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,10 +20,14 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
-    private String reservedDate;
+    private LocalDateTime reservedDate;
+
+    private String status; // PENDING, APPROVED, CANCELLED
 }
