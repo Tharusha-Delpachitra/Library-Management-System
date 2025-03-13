@@ -8,6 +8,7 @@ import com.project.backend.repository.BookRepository;
 import com.project.backend.repository.ReservationRepository;
 import com.project.backend.repository.TransactionRepository;
 import com.project.backend.repository.UserRepository;
+import com.project.backend.singleton.LibraryConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,13 @@ public class BookController {
         if (bookOptional.isPresent() && userOptional.isPresent()) {
             Book book = bookOptional.get();
             User user = userOptional.get();
+
+            int maxBooksAllowed = LibraryConfig.getInstance().getMaxBooksPerPerson();
+            long booksBorrowed = transactionRepository.countByUserId(user.getId());
+
+            if (booksBorrowed >= maxBooksAllowed) {
+                return "You have already borrowed " + maxBooksAllowed + " books. Cannot borrow more books.";
+            }
 
             if ("BORROWED".equals(book.getStatus())) {
                 return "Book already borrowed";

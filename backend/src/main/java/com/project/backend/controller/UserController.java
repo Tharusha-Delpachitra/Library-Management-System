@@ -2,6 +2,7 @@ package com.project.backend.controller;
 
 import com.project.backend.model.User;
 import com.project.backend.repository.UserRepository;
+import com.project.backend.factory.UserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +28,18 @@ public class UserController {
             return "User already exists";
         }
 
-        userRepository.save(user);
-        return "User registered successfully";
+        User newUser = UserFactory.createUser(user.getRole());
+        if (newUser == null) {
+            return "Invalid user type!";
+        }
+
+        newUser.setName(user.getName());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(user.getPassword());
+        newUser.setRole(user.getRole());
+
+        userRepository.save(newUser);
+        return "User registered successfully as " + user.getRole();
     }
 
     @PostMapping("/login")
